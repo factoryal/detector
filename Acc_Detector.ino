@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 
 // 이 선언이 있으면 부저가 울리기 시작한 1초 뒤에 자동으로 부저가 꺼집니다.
-#define ALARM_AUTO_OFF
+//#define ALARM_AUTO_OFF
 
 
 typedef int16_t vt;
@@ -98,11 +98,9 @@ public:
 	}
 	bool isPressed() {
 		return threshold < analogRead(pin);
-		Serial.print(analogRead(pin));
-		Serial.print('\t');
 	}
 	void setThreshold(void) {
-		threshold = analogRead(pin)+20;
+		threshold = analogRead(pin)+300;
 	}
 	void setThreshold(uint16_t t) {
 		threshold = t;
@@ -139,10 +137,11 @@ public:
 		sei();
 	}
 	void on() {
-		TIMSK1 |= (1 << OCIE1A); 
 		for(int i=0; i<=3; i++) Acc.update();
 		initV.setxyz(Acc.getRaw());
 		Pressure.setThreshold();
+		delay(100);
+		TIMSK1 |= (1 << OCIE1A);
 		s = 1;
 	}
 	void off() {
@@ -150,12 +149,12 @@ public:
 		s = 0;
 	}
 	bool status() { return s; }
-} Detector(10, alert);
+} Detector(20, alert);
 
 
 
 uint32_t isr_now_time = 0, isr_old_time = 0, isr_interval = 100;
-Vector3 now, old;
+Vector3 now;
 
 ISR(TIMER1_COMPA_vect) {
 	isr_now_time = millis();
@@ -169,36 +168,42 @@ ISR(TIMER1_COMPA_vect) {
 		Serial.print('\t');
 		Serial.print(now.getz());
 		Serial.print('\t');
-		Serial.print(vt(old.getAbs()-now.getAbs()));
+		Serial.print(vt(Detector.initV.getAbs()-now.getAbs()));
 		Serial.print('\t');
 		Serial.print(now.getAbs());
 		Serial.print('\t');
 		Serial.println(analogRead(A5));
-		if (now.getAbs() < old.getAbs() - Detector.threshold || now.getAbs()>old.getAbs() + Detector.threshold || Pressure.isPressed()) Detector.callback();
-		old = now;
+		if (now.getAbs() < Detector.initV.getAbs() - Detector.threshold || now.getAbs()>Detector.initV.getAbs() + Detector.threshold || Pressure.isPressed()) Detector.callback();
+		Detector.initV = now;
 	}
 }
 
 // 움직임 감지 모드가 ON인 상태에서 움직임이 감지될 때 실행할 코드를
 // alert() 함수 안에 작성하세요.
-// delay 함수 사용은 자제하도록 합니다.
+// delay() 함수 사용은 자제하도록 합니다.
 void alert() {
 	alarm.on();
-	/*Detector.off();*/
+	Detector.off();
 }
 
 // 버튼이 눌릴 때 실행할 코드를
 // button() 함수 안에 작성하세요.
 void button() {
-	alarm.off();
-	Detector.on();
+	static int old_time = 0, now_time = 0;
+	now_time = millis();
+	if (now_time - old_time > 100) {
+		old_time = now_time;
+		// 이 공간에 작성하세요.
+		alarm.off();
+		Detector.on();
+	}
 }
 
 
 SoftwareSerial BT(4, 5);
 
 void setup() {
-	Serial.begin(115200);
+	Serial.begin(9600);
 	BT.begin(9600);
 	pinMode(13, OUTPUT);
 	pinMode(2, INPUT_PULLUP);
