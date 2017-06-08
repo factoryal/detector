@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 
 // 이 선언이 있으면 부저가 울리기 시작한 1초 뒤에 자동으로 부저가 꺼집니다.
-//#define ALARM_AUTO_OFF
+#define ALARM_AUTO_OFF
 
 
 typedef int16_t vt;
@@ -47,7 +47,7 @@ private:
 	Vector3 raw;
 	uint8_t pin[3] = { A2, A3, A4 };
 public:
-	void update() { raw.setxyz(analogRead(A0)-327, analogRead(A1)-335, analogRead(A2)-347); }
+	void update() { raw.setxyz(analogRead(A0), analogRead(A1), analogRead(A2)); }
 	Vector3 getDir() { return raw.getDir(); }
 	vt getAbs() { return raw.getAbs(); }
 	Vector3 getRaw() { return raw.getxyz(); }
@@ -205,6 +205,7 @@ void setup() {
 	attachInterrupt(digitalPinToInterrupt(2), button, FALLING);
 	delay(100);
 
+	Detector.on();
 	// 기타 초기에 한 번 실행할 코드를 아래에 작성하세요.
 	
 }
