@@ -1,8 +1,10 @@
 #include <SoftwareSerial.h>
 
 // 이 선언이 있으면 부저가 울리기 시작한 1초 뒤에 자동으로 부저가 꺼집니다.
-#define ALARM_AUTO_OFF
+//#define ALARM_AUTO_OFF
 
+void alert();
+void non_alert();
 
 typedef int16_t vt;
 // Vector3 클래스
@@ -76,12 +78,12 @@ public:
 
 	void on() {
 #ifdef ALARM_AUTO_OFF
-		tone(pin, freq, 1000); 
+		tone(pin, freq, 1000);
 #else
 		tone(pin, freq);
 #endif
 	}
-	void off() { noTone(pin); }
+	void off() { noTone(pin); Serial.println("alarm off"); }
 } alarm(12, 1000);
 
 // Pressure 클래스
@@ -102,13 +104,13 @@ public:
 		Serial.print('\t');
 	}
 	void setThreshold(void) {
-		threshold = analogRead(pin)+20;
+		threshold = analogRead(pin) + 200;
 	}
 	void setThreshold(uint16_t t) {
 		threshold = t;
 	}
 
-	
+
 } Pressure;
 
 
@@ -118,16 +120,20 @@ public:
 // Detector.on() 함수로 감지 모드를 켜고
 // Detector.off() 함수로 감지 모드를 끌 수 있습니다.
 // 감지 모드가 켜져을 때 움직임이 감지되면 alert() 함수를 실행합니다.
+// Detector.on() 함수를 실행하면 현재의 가속도 값과 무게 값을 새롭게 기억합니다.
+// 감지모드 작동 중일 때 이 기억한 값과 일정 이상 차이가 나면 alert() 함수가 실행됩니다.
 class Detector {
 private:
 	bool s = 0;
 public:
 	const uint16_t threshold;
 	Vector3 initV;
-	void(*callback)(void);
+	void(*callback1)(void);
+	void(*callback2)(void);
 
-	Detector(uint16_t t, void(*func)(void)) : threshold(t) {
-		callback = func;
+	Detector(uint16_t t, void(*func1)(void), void(*func2)(void)) : threshold(t) {
+		callback1 = func1;
+		callback2 = func2;
 		cli();
 		TCCR1A = 0;
 		TCCR1B = 0;
@@ -139,8 +145,8 @@ public:
 		sei();
 	}
 	void on() {
-		TIMSK1 |= (1 << OCIE1A); 
-		for(int i=0; i<=3; i++) Acc.update();
+		TIMSK1 |= (1 << OCIE1A);
+		for (int i = 0; i <= 3; i++) Acc.update();
 		initV.setxyz(Acc.getRaw());
 		Pressure.setThreshold();
 		s = 1;
@@ -150,12 +156,12 @@ public:
 		s = 0;
 	}
 	bool status() { return s; }
-} Detector(10, alert);
+} Detector(15, alert, non_alert);
 
 
 
 uint32_t isr_now_time = 0, isr_old_time = 0, isr_interval = 100;
-Vector3 now, old;
+Vector3 now;
 
 ISR(TIMER1_COMPA_vect) {
 	isr_now_time = millis();
@@ -163,28 +169,37 @@ ISR(TIMER1_COMPA_vect) {
 		isr_old_time = isr_now_time;
 		Acc.update();
 		now = Acc.getRaw();
-		Serial.print(now.getx());
+		Serial.print(Detector.initV.getx() - now.getx());
 		Serial.print('\t');
-		Serial.print(now.gety());
+		Serial.print(Detector.initV.gety() - now.gety());
 		Serial.print('\t');
-		Serial.print(now.getz());
+		Serial.print(Detector.initV.getz() - now.getz());
 		Serial.print('\t');
-		Serial.print(vt(old.getAbs()-now.getAbs()));
+		Serial.print(vt(Detector.initV.getAbs() - now.getAbs()));
 		Serial.print('\t');
 		Serial.print(now.getAbs());
 		Serial.print('\t');
 		Serial.println(analogRead(A5));
-		if (now.getAbs() < old.getAbs() - Detector.threshold || now.getAbs()>old.getAbs() + Detector.threshold || Pressure.isPressed()) Detector.callback();
-		old = now;
+		if (abs(Detector.initV.getx() - now.getx())>Detector.threshold || abs(Detector.initV.getz() - now.getz())>Detector.threshold || Pressure.isPressed()) Detector.callback1();
+		else Detector.callback2();
 	}
 }
+
+SoftwareSerial BT(4, 5);
 
 // 움직임 감지 모드가 ON인 상태에서 움직임이 감지될 때 실행할 코드를
 // alert() 함수 안에 작성하세요.
 // delay 함수 사용은 자제하도록 합니다.
 void alert() {
 	alarm.on();
-	/*Detector.off();*/
+	BT.print('A');
+}
+
+// 움직임 감지 모드에서 움직임이 감지되지 않은 상태일 때 실행할 코드를
+// non_alert() 함수 안에 작성하세요.
+// delay 함수 사용은 자제하도록 합니다.
+void non_alert() {
+	alarm.off();
 }
 
 // 버튼이 눌릴 때 실행할 코드를
@@ -195,25 +210,26 @@ void button() {
 }
 
 
-SoftwareSerial BT(4, 5);
 
 void setup() {
-	Serial.begin(115200);
+	Serial.begin(9600);
 	BT.begin(9600);
 	pinMode(13, OUTPUT);
 	pinMode(2, INPUT_PULLUP);
 	attachInterrupt(digitalPinToInterrupt(2), button, FALLING);
 	delay(100);
 
-	Detector.on();
 	// 기타 초기에 한 번 실행할 코드를 아래에 작성하세요.
-	
+	Detector.on();
 }
 
 void loop() {
 	// 블루투스로 데이터가 들어온 경우에 실행할 코드를
 	// 이 if문 안에 작성하세요.
 	if (BT.available()) {
-
+		if (BT.read() == 'B') {
+			Detector.off();
+			alarm.off();
+		}
 	}
 }
