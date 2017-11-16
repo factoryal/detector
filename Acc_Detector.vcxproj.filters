@@ -21,10 +21,16 @@
     <ClInclude Include="__vm\.Acc_Detector.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RHT01.h">
+    <ClInclude Include="__vm\.detector.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="__vm\.detector.vsarduino.h">
+    <ClInclude Include="MPU9250.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="I2Cdev.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pin_definition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
