@@ -1,5 +1,10 @@
-#define PIN_BUZZER 12
-#define PIN_PRESS A5
+#define PIN_BUZZER 9
+#define PIN_PRESS A3
+#define PIN_INT_BTN 2
+#define ACC_X A0
+#define ACC_Y A1
+#define ACC_Z A2
+#define POT_ACC A4
+#define POT_PRS A5
 #define PIN_BT_RX 4
 #define PIN_BT_TX 5
-#define PIN_INT_BTN 2

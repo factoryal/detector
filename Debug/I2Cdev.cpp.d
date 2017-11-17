@@ -1,6 +1,7 @@
-C:\Users\vkdls\AppData\Local\Temp\VMBuilds\sketch_feb04a\mega_atmega2560\Debug\sketch_feb04a.cpp.o: \
- C:\Users\vkdls\AppData\Local\Temp\VMBuilds\sketch_feb04a\mega_atmega2560\Debug\sketch_feb04a.cpp \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/arduino.h \
+C:\Users\vkdls\AppData\Local\Temp\VMBuilds\detector\pro_16MHzatmega328\Debug\I2Cdev.cpp.o: \
+ C:\Users\vkdls\AppData\Local\Temp\VMBuilds\detector\pro_16MHzatmega328\Debug\I2Cdev.cpp \
+ C:\Users\vkdls\AppData\Local\Temp\VMBuilds\detector\pro_16MHzatmega328\Debug\I2Cdev.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.h \
@@ -10,4 +11,7 @@ C:\Users\vkdls\AppData\Local\Temp\VMBuilds\sketch_feb04a\mega_atmega2560\Debug\s
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Printable.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\mega/pins_arduino.h
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/pins_arduino.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/../standard/pins_arduino.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src/Wire.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Stream.h

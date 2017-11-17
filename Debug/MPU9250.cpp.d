@@ -1,6 +1,7 @@
-C:\Users\vkdls\AppData\Local\Temp\VMBuilds\Acc_Detector\uno\Debug\RHT01.cpp.o: \
- C:\Users\vkdls\AppData\Local\Temp\VMBuilds\Acc_Detector\uno\Debug\RHT01.cpp \
- C:\Users\vkdls\AppData\Local\Temp\VMBuilds\Acc_Detector\uno\Debug\RHT01.h \
+C:\Users\vkdls\AppData\Local\Temp\VMBuilds\detector\pro_16MHzatmega328\Debug\MPU9250.cpp.o: \
+ C:\Users\vkdls\AppData\Local\Temp\VMBuilds\detector\pro_16MHzatmega328\Debug\MPU9250.cpp \
+ C:\Users\vkdls\AppData\Local\Temp\VMBuilds\detector\pro_16MHzatmega328\Debug\MPU9250.h \
+ C:\Users\vkdls\AppData\Local\Temp\VMBuilds\detector\pro_16MHzatmega328\Debug\I2Cdev.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
@@ -11,4 +12,7 @@ C:\Users\vkdls\AppData\Local\Temp\VMBuilds\Acc_Detector\uno\Debug\RHT01.cpp.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Printable.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/pins_arduino.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/../standard/pins_arduino.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src/Wire.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Stream.h
