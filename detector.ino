@@ -266,6 +266,7 @@ SoftwareSerial BT(PIN_BT_RX, PIN_BT_TX);
 // delay 함수 사용은 자제하도록 합니다.
 void alert() {
   alarm.on();
+  Detector.off();
 }
 
 // 움직임 감지 모드에서 움직임이 감지되지 않은 상태일 때 실행할 코드를
@@ -304,11 +305,16 @@ void isr_t1_comp() {
 		Serial.print('\t');
 		Serial.print(vt(Detector.initV.getMagnitude() - now.getMagnitude()));
 		Serial.print('\t');
-		Serial.print(now.getMagnitude());
+		Serial.print(analogRead(POT_ACC));
+		Serial.print('\t');
+		Serial.print(analogRead(POT_PRS));
 		Serial.print('\t');
 		Serial.println(analogRead(PIN_PRESS));
 		if (Detector.status()) {
-			if (abs(Detector.initV.getX() - now.getX())>Detector.threshold || abs(Detector.initV.getZ() - now.getZ())>Detector.threshold || Pressure.isPressed()) Detector.callback1();
+			if (abs(Detector.initV.getX() - now.getX())>Detector.threshold ||\
+				abs(Detector.initV.getX() - now.getX())>Detector.threshold ||\
+				abs(Detector.initV.getZ() - now.getZ())>Detector.threshold\
+				/* || Pressure.isPressed()*/) Detector.callback1();
 			//else Detector.callback2();
 		}
 	}
